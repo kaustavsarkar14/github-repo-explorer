@@ -48,7 +48,7 @@ const TotalChanges = ({ repository }) => {
       {codeFrequencyData.length > 0 ? (
         <HighchartsReact highcharts={Highcharts} options={options} />
       ) : (
-        <p>No data available for Total Changes</p>
+        <p className="text-center my-2" >No data available for Total Changes</p>
       )}
     </div>
   );

@@ -43,7 +43,7 @@ const Repository = ({ repository }) => {
       </div>
       {isOpen && (
         <div>
-          {/* <TotalChanges repository={repository} /> */}
+          <TotalChanges repository={repository} />
           <CommitAcitivity repository={repository} />
         </div>
       )}

@@ -6,14 +6,14 @@ import { data } from "../dummy";
 import SelectGraphType from "./SelectGraphType";
 
 const CommitAcitivity = ({ repository }) => {
-  const [commitData, setCommitData] = useState(data);
-  const [graphType, setGraphType] = useState('c');
+  const [commitData, setCommitData] = useState([]);
+  const [graphType, setGraphType] = useState("c");
   useEffect(() => {
-    // const res = axios
-    //   .get(
-    //     `https://api.github.com/repos/${repository.owner.login}/${repository.name}/stats/contributors`
-    //   )
-    //   .then((data) => setCommitData(data.data));
+    const res = axios
+      .get(
+        `https://api.github.com/repos/${repository.owner.login}/${repository.name}/stats/contributors`
+      )
+      .then((data) => setCommitData(data.data));
   }, []);
   const options: Highcharts.Options = {
     title: {
@@ -35,20 +35,29 @@ const CommitAcitivity = ({ repository }) => {
         text: "Total Code Changes",
       },
     },
-    series: commitData && commitData.length>0 && commitData.map((contributorData) => ({
+    series:
+      commitData &&
+      commitData.length > 0 &&
+      commitData.map((contributorData) => ({
         name: contributorData.author.login,
         type: "line",
-        data: contributorData.weeks.map((week) => [week.w * 1000, week[graphType]]),
+        data: contributorData.weeks.map((week) => [
+          week.w * 1000,
+          week[graphType],
+        ]),
         showInLegend: true,
       })),
   };
   return (
-    <div>
-        <SelectGraphType graphType={graphType} setGraphType={setGraphType} />
+    <div className="relative bg-white" >
+        <div className="absolute right-6 z-10 md:mt-0 mt-10" >
+
+      <SelectGraphType graphType={graphType} setGraphType={setGraphType} />
+        </div>
       {commitData.length > 0 ? (
         <HighchartsReact highcharts={Highcharts} options={options} />
       ) : (
-        <p>No data available for Contributor Changes</p>
+        <p className="text-center my-2" >No data available for Contributor Changes</p>
       )}
     </div>
   );
