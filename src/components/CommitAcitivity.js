@@ -4,16 +4,21 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { data } from "../dummy";
 import SelectGraphType from "./SelectGraphType";
+import { CircularProgress } from "@mui/material";
 
 const CommitAcitivity = ({ repository }) => {
   const [commitData, setCommitData] = useState([]);
   const [graphType, setGraphType] = useState("c");
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const res = axios
       .get(
         `https://api.github.com/repos/${repository.owner.login}/${repository.name}/stats/contributors`
       )
-      .then((data) => setCommitData(data.data));
+      .then((data) => setCommitData(data.data))
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
   }, []);
   const options: Highcharts.Options = {
     title: {
@@ -48,16 +53,28 @@ const CommitAcitivity = ({ repository }) => {
         showInLegend: true,
       })),
   };
+  if (loading)
+    return (
+      <div className="w-full h-20 flex justify-center items-center">
+        <CircularProgress />
+      </div>
+    );
   return (
-    <div className="relative bg-white" >
-        <div className="absolute right-6 z-10 md:mt-0 mt-10" >
-
-      <SelectGraphType graphType={graphType} setGraphType={setGraphType} />
-        </div>
+    <div className="relative">
       {commitData.length > 0 ? (
-        <HighchartsReact highcharts={Highcharts} options={options} />
+        <>
+          <div className="absolute right-6 z-10 md:mt-0 mt-10 bg-white">
+            <SelectGraphType
+              graphType={graphType}
+              setGraphType={setGraphType}
+            />
+          </div>
+          <HighchartsReact highcharts={Highcharts} options={options} />
+        </>
       ) : (
-        <p className="text-center my-2" >No data available for Contributor Changes</p>
+        <p className="text-center my-2">
+          No data available for Contributor Changes
+        </p>
       )}
     </div>
   );
