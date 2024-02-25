@@ -38,7 +38,10 @@ const Repository = ({ repository }) => {
           className="absolute top-1/2 right-0 -translate-x-1/2 -translate-y-1/2 opacity-60"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <ChevronRightRoundedIcon fontSize="large" />
+          <ChevronRightRoundedIcon
+            fontSize="large"
+            style={{ transform: isOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "all 0.3s ease-in-out" }}
+          />
         </button>
       </div>
       {isOpen && (
